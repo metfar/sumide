@@ -39,7 +39,7 @@ import time;
 from sumtui.document import TextDocument;
 from sumtui.symbols import detect_language;
 from sumtui.modeline import scan_vim_modelines;
-from sumtui.widgets import Button, CommandWindow, CommandWindowPane, Dialog, FunctionAction, HBox, Label, Menu, MenuItem, Separator, TextEditor, TextInput, TextView, TextViewPane, VBox, Workspace, WorkspaceWindow;
+from sumtui.widgets import Button, CommandWindow, CommandWindowPane, Dialog, FileDialog, FunctionAction, HBox, Label, Menu, MenuItem, Separator, TextEditor, TextInput, TextView, TextViewPane, VBox, Workspace, WorkspaceWindow;
 from sumtui.tools.edit import EditApp, _EditorHScroll, _EditorVScroll;
 
 from . import __version__;
@@ -372,6 +372,24 @@ class ScriptIDE(EditApp):
     def open_path(self, path, activate=True):
         document = TextDocument.load(Path(path).expanduser(), force_binary=self.force_binary) if Path(path).expanduser().exists() else TextDocument.empty(Path(path).expanduser());
         language = self._document_language(document, fallback=self.language);
+        current = self._code_buffers.get(getattr(self, "code_window", None));
+        if current is not None and self.code_window.persistent and self.document.path is None and not self.editor.modified and not self.editor.text:
+            current["document"] = document;
+            current["language"] = language;
+            self.document = document;
+            self.language = language;
+            self.editor.set_text(document.text, modified=False);
+            self.editor.configure_syntax(language=get_profile(language).syntax if get_profile(language) is not None else None, filename=document.path.name if document.path is not None else None);
+            self._sync_markers_for(document, self.editor);
+            self.code_window.title = self._code_title_for(document, language);
+            self.command_view.set_prompt(self._prompt());
+            self.menu.menus = self._menus();
+            if activate:
+                self.workspace.show(self.code_window);
+                self.app.focus.set(self.editor);
+            self._update_status("Loaded");
+            self.app.invalidate();
+            return self.code_window;
         return self._add_code_document(document, language=language, activate=activate, persistent=False);
 
     def _open_dialog_now(self):
@@ -386,7 +404,6 @@ class ScriptIDE(EditApp):
                 self.open_path(path, activate=True);
             except Exception as exc:
                 self._update_status("Open error: {}".format(exc));
-        from ..widgets import FileDialog;
         dialog = FileDialog(path=start, title="Open source file", on_accept=accepted, on_cancel=close, theme=self.app.theme);
         self.app.push_modal(dialog);
         self.app.invalidate();
@@ -434,12 +451,30 @@ class ScriptIDE(EditApp):
                 return on_saved();
         return result;
 
+    def _clear_persistent_code_document(self, target):
+        state = self._code_buffers.get(target);
+        if state is None:
+            return False;
+        language = state.get("language", self.language);
+        document = TextDocument.empty();
+        state["document"] = document;
+        state["language"] = language;
+        self.document = document;
+        self.language = language;
+        state["editor"].set_text("", modified=False);
+        target.title = self._code_title_for(document, language);
+        self.workspace.show(target);
+        self._workspace_activated(target);
+        self._update_status("Closed source document");
+        self.app.invalidate();
+        return True;
+
     def _close_code_window_now(self, target):
         state = self._code_buffers.get(target);
         if state is None:
             return self._close_workspace_window_now(target);
         if target.persistent:
-            return self._close_workspace_window_now(target);
+            return self._clear_persistent_code_document(target);
         changed = self.workspace.remove_window(target);
         if changed:
             self._code_buffers.pop(target, None);
@@ -460,6 +495,13 @@ class ScriptIDE(EditApp):
         if state["editor"].modified:
             return self._confirm_unsaved(lambda: self._close_code_window_now(target));
         return self._close_code_window_now(target);
+
+    def close_current_document(self):
+        target = getattr(self, "code_window", None);
+        if target is None or target not in self._code_buffers:
+            self._update_status("No source document is active");
+            return False;
+        return self.close_workspace_window(target);
 
     def _confirm_all_unsaved(self, callback):
         dirty = [(window, state) for window, state in self._code_buffers.items() if state["editor"].modified];
@@ -568,7 +610,9 @@ class ScriptIDE(EditApp):
         if file_menu is not None:
             if file_menu.items:
                 file_menu.items[0] = MenuItem("New", submenu=self._new_template_menu());
-            compare_index = next((index for index, item in enumerate(file_menu.items) if getattr(item, "label", "") == "Compare with..."), 3);
+            save_as_index = next((index for index, item in enumerate(file_menu.items) if getattr(item, "label", "") == "Save As..."), 3);
+            file_menu.items.insert(save_as_index + 1, MenuItem("Close", self.close_current_document, self._ks("window.close")));
+            compare_index = next((index for index, item in enumerate(file_menu.items) if getattr(item, "label", "") == "Compare with..."), save_as_index + 3);
             file_menu.items.insert(compare_index + 1, MenuItem("Compare with open buffer", submenu=self._compare_open_buffer_menu()));
             file_menu.items.insert(compare_index + 2, MenuItem("Compare all open documents", self.compare_all_open_documents, enabled=len([state for state in self._code_buffers.values() if state["document"].path is not None and Path(state["document"].path).expanduser().exists()]) >= 2));
         run_items = [

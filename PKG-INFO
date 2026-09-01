@@ -1,3 +1,21 @@
+Metadata-Version: 2.4
+Name: sumide
+Version: 0.2.1
+Summary: Multi-language IDE for the Sum ecosystem, extracted from the historical sumTUI/sumX/sumBASIC editors.
+Author-email: William Martinez Bas <metfar@gmail.com>
+License: GPL-2.0-or-later
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: GNU General Public License v2 or later (GPLv2+)
+Classifier: Programming Language :: Python :: 3
+Classifier: Topic :: Software Development :: Integrated Development Environments (IDE)
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: sumtui>=0.7.1
+Requires-Dist: rich>=13.0
+Dynamic: license-file
+
 # sumIDE 0.2.1
 
 `sumIDE` is the common multi-language IDE for the Sum ecosystem. It is built on `sumTUI`, but it is a separate project: `sumTUI` owns reusable terminal UI/editor primitives and `sumIDE` owns IDE behavior, language profiles, templates, preferences, build/run integration and project-oriented features.

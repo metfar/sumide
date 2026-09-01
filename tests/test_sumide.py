@@ -118,3 +118,22 @@ def test_every_language_profile_has_a_default_template():
     for language in language_choices():
         rendered = manager.render(language, filename="demo" + get_profile(language).extensions[0]);
         assert rendered.strip();
+
+
+def test_file_menu_has_close_and_open_reuses_initial_blank_buffer():
+    with tempfile.TemporaryDirectory() as directory:
+        root = Path(directory);
+        source = root / "demo.prg";
+        source.write_text('? "hello"\n', encoding="utf-8");
+        ide = ScriptIDE(None, language="xbase", sumide_config_path=root / "config.json");
+        original = ide.code_window;
+        labels = [item.label for item in next(menu for menu in ide._menus() if menu.title == "File").items if getattr(item, "label", "")];
+        assert "Close" in labels;
+        loaded = ide.open_path(source);
+        assert loaded is original;
+        assert ide.document.path == source;
+        assert 'hello' in ide.editor.text;
+        assert ide.close_current_document();
+        assert ide.document.path is None;
+        assert ide.editor.text == "";
+        assert ide.code_window is original;

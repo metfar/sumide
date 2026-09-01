@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.1 - 2026-09-01
+
+- Added File -> Close for the active source document/window, completing New/Open/Save/Save As/Close source lifecycle management.
+- Opening a source from the initial empty persistent code window now reuses that window instead of leaving an unnecessary blank buffer behind.
+- Fixed the common source Open dialog import path.
+- Supports language launchers that intentionally start with Command focused while retaining normal source windows.
+
 ## 0.2.0 - 2026-09-01
 
 ### First coordinated post-extraction release
