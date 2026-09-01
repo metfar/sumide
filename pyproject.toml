@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sumide"
+version = "0.2.0"
+description = "Multi-language IDE for the Sum ecosystem, extracted from the historical sumTUI/sumX/sumBASIC editors."
+readme = "README.md"
+requires-python = ">=3.8"
+license = { text = "GPL-2.0-or-later" }
+authors = [{ name = "William Martinez Bas", email = "metfar@gmail.com" }]
+dependencies = ["sumtui>=0.7.0", "rich>=13.0"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: GNU General Public License v2 or later (GPLv2+)",
+    "Programming Language :: Python :: 3",
+    "Topic :: Software Development :: Integrated Development Environments (IDE)",
+]
+
+[project.scripts]
+sumide = "sumide.app:main"
+sumpy = "sumide.app:main_python"
+sumr = "sumide.app:main_r"
+sumbash = "sumide.app:main_bash"
+sumc = "sumide.app:main_c"
+sumcxx = "sumide.app:main_cpp"
+sumphp = "sumide.app:main_php"
+sumruby = "sumide.app:main_ruby"
+sumjs = "sumide.app:main_javascript"
+sumide-basic = "sumide.app:main_basic"
+sumide-xbase = "sumide.app:main_xbase"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["sumide*"]
+
+[tool.setuptools.package-data]
+sumide = ["templates/*/*.tpl"]
