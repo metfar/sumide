@@ -11,6 +11,7 @@ from sumide.app import ScriptIDE;
 from sumide.config import defaults, load_config, save_config;
 from sumide.profiles import canonical_language, get_profile, language_from_path;
 from sumide.templates import TemplateManager;
+from sumtui import KeyEvent;
 from sumtui.modeline import parse_vim_modeline, scan_vim_modelines;
 
 
@@ -137,3 +138,47 @@ def test_file_menu_has_close_and_open_reuses_initial_blank_buffer():
         assert ide.document.path is None;
         assert ide.editor.text == "";
         assert ide.code_window is original;
+
+
+def test_sum_language_profiles_declare_owned_help_modules():
+    assert get_profile("basic").help_module == "sumbasic.helpdb";
+    assert get_profile("xbase").help_module == "sumx.helpdb";
+    assert get_profile("python").help_module == "";
+
+
+def test_help_menu_tracks_active_language_and_preserves_editor_help():
+    with tempfile.TemporaryDirectory() as directory:
+        ide = ScriptIDE(None, language="xbase", sumide_config_path=Path(directory) / "config.json");
+        help_menu = next(menu for menu in ide._menus() if menu.title == "Help");
+        labels = [item.label for item in help_menu.items if getattr(item, "label", "")];
+        assert labels[:2] == ["xBase Help", "Editor Help"];
+        assert ide.keys.primary("help.context") == "f1";
+        assert ide.keys.primary("help.editor") == "ctrl+f1";
+        ide.language = "python";
+        help_menu = next(menu for menu in ide._menus() if menu.title == "Help");
+        labels = [item.label for item in help_menu.items if getattr(item, "label", "")];
+        assert labels[0] == "Editor Help";
+
+
+def test_language_help_provider_uses_language_owned_corpus():
+    from sumide.language_help import load_language_help;
+    basic = load_language_help(get_profile("basic"));
+    xbase = load_language_help(get_profile("xbase"));
+    assert "sumBASIC Help" in basic.index_markdown();
+    assert basic.find_topic("PRINT").example;
+    assert "sumX Help" in xbase.index_markdown();
+    assert xbase.find_topic("IF").example;
+
+
+def test_language_help_dialog_uses_scroll_panes_and_f2_topic_map():
+    from sumtui import ListView, MarkdownView;
+    with tempfile.TemporaryDirectory() as directory:
+        ide = ScriptIDE(None, language="xbase", sumide_config_path=Path(directory) / "config.json");
+        provider = ide._language_help_provider();
+        assert ide._show_language_help(provider);
+        assert "f2" in ide.app.bindings;
+        assert isinstance(ide.app.focus.current, ListView);
+        assert ide.app.dispatch(KeyEvent("f2"));
+        assert isinstance(ide.app.focus.current, ListView);
+        ide.app.pop_modal();
+        ide.app.pop_modal();

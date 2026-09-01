@@ -39,7 +39,8 @@ import time;
 from sumtui.document import TextDocument;
 from sumtui.symbols import detect_language;
 from sumtui.modeline import scan_vim_modelines;
-from sumtui.widgets import Button, CommandWindow, CommandWindowPane, Dialog, FileDialog, FunctionAction, HBox, Label, Menu, MenuItem, Separator, TextEditor, TextInput, TextView, TextViewPane, VBox, Workspace, WorkspaceWindow;
+from sumtui.widgets import Button, CommandWindow, CommandWindowPane, Dialog, FileDialog, FunctionAction, HBox, Label, ListView, ListViewPane, MarkdownView, MarkdownViewPane, Menu, MenuItem, Separator, StatusBar, TextEditor, TextInput, TextView, TextViewPane, VBox, Workspace, WorkspaceWindow;
+from sumtui.clipboard import clipboard;
 from sumtui.tools.edit import EditApp, _EditorHScroll, _EditorVScroll;
 
 from . import __version__;
@@ -48,6 +49,7 @@ from .profiles import canonical_language, get_profile, language_choices, languag
 from .templates import TemplateManager;
 from .config import default_config_path;
 from .preferences import open_preferences;
+from .language_help import LanguageHelpUnavailable, load_language_help;
 
 
 class _RSession:
@@ -520,6 +522,8 @@ class ScriptIDE(EditApp):
 
     def _register_keybindings(self):
         super()._register_keybindings();
+        self.keys.set_bindings("help.editor", ["ctrl+f1"]);
+        self.keys.register("help.context", "Language / editor help", ["f1"], context="editor", callback=self.context_help);
         self.keys.register("script.run", "Run / Stop", ["f5", "ctrl+r"], context="editor", callback=self.toggle_run);
         self.keys.register("script.compile", "Compile", ["ctrl+f6"], context="editor", callback=self.compile_program);
         self.keys.register("menu.run", "Run menu", ["alt+r"], context="editor", callback=lambda: self.open_menu(6));
@@ -528,6 +532,12 @@ class ScriptIDE(EditApp):
 
     def _make_function_bar(self):
         bar = super()._make_function_bar();
+        context_key = self.keys.primary("help.context");
+        if context_key:
+            for action in bar.actions:
+                if action.label == "Help":
+                    action.key = context_key;
+                    break;
         key = self.keys.primary("script.run");
         if key:
             bar.actions.insert(min(2, len(bar.actions)), FunctionAction(key, "Run/Stop", None));
@@ -604,6 +614,156 @@ class ScriptIDE(EditApp):
         mode = "compare" if len(paths) == 2 else "parallel";
         return self._launch_comparison(paths, mode=mode);
 
+    def _language_help_profile(self):
+        return get_profile(self.language);
+
+    def _language_help_provider(self):
+        profile = self._language_help_profile();
+        if profile is None or not getattr(profile, "help_module", ""):
+            return None;
+        return load_language_help(profile);
+
+    def _show_language_help(self, provider):
+        current = {"topic": None};
+        viewer = MarkdownView(provider.index_markdown());
+        names = list(provider.topic_names());
+
+        def show_topic(value, _row=None):
+            topic = provider.find_topic(value);
+            if topic is None:
+                return False;
+            current["topic"] = topic;
+            viewer.set_text(topic.markdown());
+            self.app.invalidate();
+            return True;
+
+        topics = ListView([(name, name) for name in names], title="Topics", on_change=show_topic, on_activate=show_topic);
+
+        def close(*_args):
+            self.app.pop_modal();
+            self.app.focus.set(self.editor);
+            self._update_status();
+            self.app.invalidate();
+            return True;
+
+        def copy_example(*_args):
+            topic = current.get("topic");
+            if topic is not None and getattr(topic, "example", ""):
+                clipboard.copy_text(topic.example);
+                hints.set("Example copied: {}".format(topic.name));
+            elif viewer.copy_code_block(-1):
+                hints.set("Code example copied");
+            else:
+                clipboard.copy_text(viewer.markdown);
+                hints.set("Help text copied");
+            self.app.invalidate();
+            return True;
+
+        def search(*_args):
+            entry = TextInput("");
+            search_status = StatusBar("Enter searches topic names and summaries; Esc closes");
+
+            def search_close(*_values):
+                self.app.pop_modal();
+                self.app.focus.set(topics);
+                self.app.invalidate();
+                return True;
+
+            def accepted(value=None, *_values):
+                needle = str(entry.value if value is None else value).strip().casefold();
+                if not needle:
+                    return False;
+                for index, name in enumerate(names):
+                    topic = provider.find_topic(name);
+                    haystack = "{} {} {}".format(name, getattr(topic, "category", ""), getattr(topic, "summary", "")).casefold();
+                    if needle in haystack:
+                        topics.select(index);
+                        show_topic(name);
+                        search_close();
+                        return True;
+                search_status.set("No help topic contains: {}".format(needle));
+                self.app.invalidate();
+                return False;
+
+            entry.on_submit = accepted;
+            body = VBox(Label("Search help:"), entry, search_status, HBox(Button("Find", on_press=accepted, default=True), Button("Cancel", on_press=search_close), ratios=[1, 1]), sizes=[1, 1, 1, None]);
+            dialog = Dialog(body, title="{} Search".format(provider.label), width=70, height=10, on_cancel=search_close, shadow=True);
+            self.app.push_modal(dialog);
+            self.app.focus.set(entry);
+            self.app.invalidate();
+            return True;
+
+        def topic_map(*_args):
+            rows = [];
+            current_index = 0;
+            current_topic = current.get("topic");
+            for index, name in enumerate(names):
+                topic = provider.find_topic(name);
+                category = getattr(topic, "category", "") if topic is not None else "";
+                rows.append(("{} / {}".format(category, name) if category else name, name));
+                if current_topic is not None and name == current_topic.name:
+                    current_index = index;
+            listing = ListView(rows, title="Category / Topic");
+            listing.select(current_index);
+
+            def map_close(*_values):
+                self.app.pop_modal();
+                self.app.focus.set(topics);
+                self.app.invalidate();
+                return True;
+
+            def map_activate(*_values):
+                name = listing.current_value;
+                if name is None:
+                    return False;
+                for index, topic_name in enumerate(names):
+                    if topic_name == name:
+                        topics.select(index);
+                        break;
+                show_topic(name);
+                return map_close();
+
+            listing.on_activate = map_activate;
+            listing_pane = ListViewPane(listing, theme=self.app.theme);
+            map_status = StatusBar("Enter Go to topic  Esc Return to help");
+            map_body = VBox(listing_pane, map_status, sizes=[None, 1]);
+            map_dialog = Dialog(map_body, title="{} Topic Map".format(provider.label), width=72, height=min(28, max(12, len(rows) + 6)), on_cancel=map_close, shadow=True);
+            self.app.push_modal(map_dialog);
+            self.app.focus.set(listing);
+            self.app.invalidate();
+            return True;
+
+        hints = StatusBar("F2 Topic Map  Tab Topic/Text  F3 Search  F6/Ctrl+C Copy Example  F11 Max/Restore  Esc Close");
+        topics_pane = ListViewPane(topics, theme=self.app.theme);
+        viewer_pane = MarkdownViewPane(view=viewer, theme=self.app.theme);
+        body = HBox(topics_pane, viewer_pane, sizes=[28, None]);
+        content = VBox(body, hints, sizes=[None, 1]);
+        dialog = Dialog(content, title=provider.title, width=104, height=30, on_cancel=close, padding=(0, 1), maximizable=True);
+        self.app.push_modal(dialog, bindings={"f2": topic_map, "f3": search, "f6": copy_example, "ctrl+c": copy_example});
+        self.app.focus.set(topics);
+        self._update_status("{} help".format(provider.label));
+        self.app.invalidate();
+        return True;
+
+    def language_help(self):
+        profile = self._language_help_profile();
+        if profile is None:
+            return self.help();
+        if not getattr(profile, "help_module", ""):
+            self._update_status("No bundled {} language reference; showing editor help".format(profile.label));
+            return self.help();
+        try:
+            provider = self._language_help_provider();
+        except LanguageHelpUnavailable as exc:
+            self._update_status(str(exc));
+            return self._show_text_dialog("{} Help".format(profile.label), str(exc) + "\n\nThe language package may not be installed in this environment.");
+        if provider is None:
+            return self.help();
+        return self._show_language_help(provider);
+
+    def context_help(self):
+        return self.language_help();
+
     def _menus(self):
         menus = super()._menus();
         file_menu = next((menu for menu in menus if menu.title == "File"), None);
@@ -630,6 +790,22 @@ class ScriptIDE(EditApp):
             if self.language in ("c", "cpp"):
                 options.items.insert(2, MenuItem("C/C++ build commands...", self.build_commands_dialog));
                 options.items.insert(3, Separator());
+        help_menu = next((menu for menu in menus if menu.title == "Help"), None);
+        if help_menu is not None:
+            profile = self._language_help_profile();
+            if profile is not None and getattr(profile, "help_module", ""):
+                help_menu.items = [
+                    MenuItem("{} Help".format(profile.label), self.context_help, self._ks("help.context")),
+                    MenuItem("Editor Help", self.help, self._ks("help.editor")),
+                    Separator(),
+                    MenuItem("About...", self.about),
+                ];
+            else:
+                help_menu.items = [
+                    MenuItem("Editor Help", self.context_help, self._ks("help.context")),
+                    Separator(),
+                    MenuItem("About...", self.about),
+                ];
         help_index = next((index for index, menu in enumerate(menus) if menu.title == "Help"), len(menus));
         menus.insert(help_index, run_menu);
         return menus;

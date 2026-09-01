@@ -37,11 +37,12 @@ class LanguageProfile:
     syntax: str = "text";
     runner: tuple = ();
     aliases: tuple = ();
+    help_module: str = "";
 
 
 _PROFILES = {
     "bash": LanguageProfile("bash", "Bash", (".sh", ".bash"), syntax="bash", runner=("bash", "{source}"), aliases=("sh", "shell")),
-    "basic": LanguageProfile("basic", "BASIC", (".bas", ".basic"), syntax="basic", runner=("python-module", "sumbasic", "--run", "{source}"), aliases=("sumbasic",)),
+    "basic": LanguageProfile("basic", "BASIC", (".bas", ".basic"), syntax="basic", runner=("python-module", "sumbasic", "--run", "{source}"), aliases=("sumbasic",), help_module="sumbasic.helpdb"),
     "c": LanguageProfile("c", "C", (".c", ".h"), syntax="c"),
     "cpp": LanguageProfile("cpp", "C++", (".cpp", ".cc", ".cxx", ".hpp", ".hh", ".hxx"), syntax="cpp", aliases=("cxx", "c++", "cc")),
     "html": LanguageProfile("html", "HTML", (".html", ".htm"), tab_width=2, indent_width=2, syntax="html"),
@@ -50,7 +51,7 @@ _PROFILES = {
     "python": LanguageProfile("python", "Python", (".py", ".pyw"), syntax="python", runner=("python", "{source}"), aliases=("py", "python3")),
     "r": LanguageProfile("r", "R", (".r", ".R"), syntax="r", runner=("Rscript", "--vanilla", "{source}"), aliases=("rscript",)),
     "ruby": LanguageProfile("ruby", "Ruby", (".rb", ".ruby"), syntax="ruby", runner=("ruby", "{source}"), aliases=("rb",)),
-    "xbase": LanguageProfile("xbase", "xBase", (".prg", ".ch"), syntax="xbase", runner=("python-module", "sumx", "--run", "{source}"), aliases=("sumx", "dbase")),
+    "xbase": LanguageProfile("xbase", "xBase", (".prg", ".ch"), syntax="xbase", runner=("python-module", "sumx", "--run", "{source}"), aliases=("sumx", "dbase"), help_module="sumx.helpdb"),
 };
 
 _ALIASES = {};

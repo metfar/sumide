@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: sumide
-Version: 0.2.1
+Version: 0.2.3
 Summary: Multi-language IDE for the Sum ecosystem, extracted from the historical sumTUI/sumX/sumBASIC editors.
 Author-email: William Martinez Bas <metfar@gmail.com>
 License: GPL-2.0-or-later
@@ -12,17 +12,17 @@ Classifier: Topic :: Software Development :: Integrated Development Environments
 Requires-Python: >=3.8
 Description-Content-Type: text/markdown
 License-File: LICENSE
-Requires-Dist: sumtui>=0.7.1
+Requires-Dist: sumtui>=0.7.2
 Requires-Dist: rich>=13.0
 Dynamic: license-file
 
-# sumIDE 0.2.1
+# sumIDE 0.2.2
 
 `sumIDE` is the common multi-language IDE for the Sum ecosystem. It is built on `sumTUI`, but it is a separate project: `sumTUI` owns reusable terminal UI/editor primitives and `sumIDE` owns IDE behavior, language profiles, templates, preferences, build/run integration and project-oriented features.
 
 ## Origin
 
-`sumIDE` was extracted in September 2026 from the IDE/editor work that had accumulated in `sumTUI`, `sumX` and `sumBASIC`. This repository intentionally keeps that lineage in `CHANGELOG.md`; version `0.2.1` is the first coordinated post-extraction release; the package version is not a claim that the IDE work started from zero.
+`sumIDE` was extracted in September 2026 from the IDE/editor work that had accumulated in `sumTUI`, `sumX` and `sumBASIC`. This repository intentionally keeps that lineage in `CHANGELOG.md`; version `0.2.0` began the extracted line and the changelog keeps the earlier editor/IDE history; the package version is not a claim that the IDE work started from zero.
 
 ## Language profiles
 
@@ -39,6 +39,13 @@ sumruby tool.rb
 ```
 
 `sumBASIC` and `sumX` keep their runtime/compile command-line modes, but their source-editor entry paths delegate to this common IDE. When those runtime packages are installed, `sumIDE --language=basic` and `sumIDE --language=xbase` load their language-specific in-process backends while keeping the common sumIDE shell. The historical commands `sumbasic program.bas` and `sumx program.prg` therefore act as compatibility launchers into the same IDE rather than maintaining separate editor implementations.
+
+
+## Context-sensitive language help
+
+`F1` follows the active source buffer. BASIC buffers load the help corpus provided by `sumbasic`; xBase buffers load the help corpus provided by `sumx`. The language package owns its reference text while sumIDE owns the common explorer UI, so adding another native Sum language does not require duplicating the help window.
+
+The explorer provides topic navigation, F3 search, and **F6 / Ctrl+C** to copy the current functional example. **Ctrl+F1** always opens the generic editor help. If the active language has no bundled reference provider, F1 falls back to editor help.
 
 ## Preferences
 
@@ -68,5 +75,9 @@ GPL-2.0-or-later.
 ### Source lifecycle
 
 The common File menu owns source-buffer lifecycle: New, Open, Save, Save As, and Close. Language launchers such as `sumx` may start with the Command window focused while keeping source programs available as normal sumIDE code windows.
+
+### Language help browser
+
+Language-owned help opens in the common sumIDE browser.  Both the topic list and the rendered Markdown pane have scrollbars. **F2** opens the Topic Map from either side of the help browser, **F3** searches, and **F6 / Ctrl+C** copies the current functional example. The help provider follows the active buffer language.
 
 <p align=center><b>- oOo -<b></p>
