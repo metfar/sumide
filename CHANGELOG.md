@@ -1,4 +1,12 @@
-## 0.2.2 - 2026-09-01
+# Changelog
+
+## 0.2.4 - 2026-09-01
+
+- Changed the fresh-workspace layout to Code across the top with Output below-left and Command below-right; all three are visible from startup and remain ordinary movable/resizable WorkspaceWindow instances.
+- F5/Run now always reveals and activates Output before execution. Interactive language backends may temporarily activate Command when a program requests keyboard input.
+- Moved generic programming `hello.*` samples and language launcher examples from sumTUI into sumIDE, matching the post-split ownership boundary.
+- Uses a new `sumide-v2` workspace-layout namespace so old saved geometry cannot silently hide the newly standardized Output/Command layout.
+- Retains automatic Markdown mapping through the common sumTUI editor layer rather than implementing it as an IDE-only feature.
 
 ## 0.2.3 - 2026-09-01
 
@@ -6,13 +14,12 @@
 - F2 inside language help opens a topic map and jumps directly to the selected help topic.
 - Help remains routed by the active buffer language.
 
+## 0.2.2 - 2026-09-01
 
-- F1 in sumIDE is now context-sensitive: BASIC/xBase buffers open the help corpus owned by the active language; Ctrl+F1 keeps the generic editor help.
+- F1 in sumIDE is context-sensitive: BASIC/xBase buffers open the help corpus owned by the active language; Ctrl+F1 keeps the generic editor help.
 - Help is resolved from the active buffer language rather than from the launcher used to start the IDE, so switching between supported language buffers also switches help context.
 - Added a common language-help explorer with topic navigation, search, and F6/Ctrl+C example copying.
 - Added an extensible `help_module` field to language profiles; language packages own their reference corpus while sumIDE owns presentation.
-
-# Changelog
 
 ## 0.2.1 - 2026-09-01
 

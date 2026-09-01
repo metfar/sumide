@@ -78,6 +78,28 @@ def test_script_ide_detects_languages_and_new_template_menu():
         assert any(getattr(item, "label", "") == "Preferences..." for item in options.items);
 
 
+
+
+def test_default_workspace_shows_code_output_command_and_code_is_resizable():
+    with tempfile.TemporaryDirectory() as directory:
+        ide = ScriptIDE(None, language="python", sumide_config_path=Path(directory) / "config.json");
+        assert ide.code_window.visible;
+        assert ide.output_window.visible;
+        assert ide.command_window.visible;
+        assert ide.code_window.top == 0;
+        assert ide.output_window.top == ide.code_window.height;
+        assert ide.command_window.top == ide.code_window.height;
+        assert ide.output_window.left == 0;
+        assert ide.command_window.left == ide.output_window.width;
+        ide.workspace.activate(ide.code_window);
+        old = (ide.code_window.width, ide.code_window.height);
+        assert ide.workspace.begin_resize_active();
+        assert ide.workspace.capture_event(KeyEvent("left"));
+        assert ide.workspace.capture_event(KeyEvent("up"));
+        assert ide.workspace.capture_event(KeyEvent("enter"));
+        assert ide.code_window.width == old[0] - 1;
+        assert ide.code_window.height == old[1] - 1;
+
 def test_html_new_template_uses_two_space_profile():
     with tempfile.TemporaryDirectory() as directory:
         ide = ScriptIDE(None, language="html", sumide_config_path=Path(directory) / "config.json");

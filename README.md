@@ -1,4 +1,4 @@
-# sumIDE 0.2.2
+# sumIDE 0.2.4
 
 `sumIDE` is the common multi-language IDE for the Sum ecosystem. It is built on `sumTUI`, but it is a separate project: `sumTUI` owns reusable terminal UI/editor primitives and `sumIDE` owns IDE behavior, language profiles, templates, preferences, build/run integration and project-oriented features.
 
@@ -22,6 +22,16 @@ sumruby tool.rb
 
 `sumBASIC` and `sumX` keep their runtime/compile command-line modes, but their source-editor entry paths delegate to this common IDE. When those runtime packages are installed, `sumIDE --language=basic` and `sumIDE --language=xbase` load their language-specific in-process backends while keeping the common sumIDE shell. The historical commands `sumbasic program.bas` and `sumx program.prg` therefore act as compatibility launchers into the same IDE rather than maintaining separate editor implementations.
 
+
+## Workspace layout
+
+A fresh IDE session opens all three common work areas: **Code** across the top, with **Output** below on the left and **Command** below on the right. All three are normal `WorkspaceWindow` instances: they can be activated, moved, resized, maximized, hidden and reopened. Running the current buffer with **F5 / Run** always shows and activates Output, even when it had previously been closed.
+
+The default layout uses the `sumide-v2` workspace namespace so older saved layouts from the pre-split IDE do not accidentally hide the new Output/Command arrangement.
+
+## Programming examples
+
+Language-level sample programs belong to sumIDE rather than sumTUI. The source distribution includes `examples/hello.*` files for the supported profiles plus launcher examples under `examples/launchers/`. sumTUI keeps only examples that demonstrate the toolkit itself (widgets, `sumedit`, `suminput`, `sumdialog`, themes, and related TUI facilities).
 
 ## Context-sensitive language help
 

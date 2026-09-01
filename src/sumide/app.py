@@ -193,20 +193,20 @@ class ScriptIDE(EditApp):
         self.command_pane = CommandWindowPane(self.command_view);
         available_width = max(40, int(self.app.width));
         available_height = max(12, int(self.app.height) - 3);
-        code_width = max(30, min(available_width - 2, int(available_width * 0.78)));
-        code_height = max(9, min(available_height - 1, int(available_height * 0.72)));
-        output_width = max(28, min(available_width - 4, int(available_width * 0.68)));
-        output_height = max(7, min(available_height - 2, 10));
-        command_width = max(28, min(available_width - 2, 44));
-        command_height = max(7, min(available_height - 2, 11));
-        self.code_window = WorkspaceWindow(self.panel.child, title=self._code_title(), name="code", left=1, top=0, width=code_width, height=code_height, content_style="viewer", persistent=True);
-        self.output_window = WorkspaceWindow(self.output_pane, title="Output", name="output", left=3, top=max(1, available_height - output_height), width=output_width, height=output_height, content_style="viewer");
-        self.command_window = WorkspaceWindow(self.command_pane, title="Command", name="command", left=max(0, available_width - command_width - 1), top=max(1, available_height - command_height - 1), width=command_width, height=command_height, content_style="command");
+        bottom_height = max(7, min(11, max(7, available_height // 3)));
+        code_height = max(5, available_height - bottom_height);
+        output_width = max(20, int(available_width * 0.62));
+        command_width = max(12, available_width - output_width);
+        if output_width + command_width > available_width:
+            output_width = max(12, available_width - command_width);
+        self.code_window = WorkspaceWindow(self.panel.child, title=self._code_title(), name="code", left=0, top=0, width=available_width, height=code_height, visible=True, content_style="viewer", persistent=True);
+        self.output_window = WorkspaceWindow(self.output_pane, title="Output", name="output", left=0, top=code_height, width=output_width, height=bottom_height, visible=True, content_style="viewer", persistent=True);
+        self.command_window = WorkspaceWindow(self.command_pane, title="Command", name="command", left=output_width, top=code_height, width=command_width, height=bottom_height, visible=True, content_style="command", persistent=True);
         self.workspace = Workspace(
             self.output_window,
             self.command_window,
             self.code_window,
-            layout_id="sumide",
+            layout_id="sumide-v2",
             layout_path=self._workspace_layout_path(),
             viewport_width=available_width,
             viewport_height=available_height,
