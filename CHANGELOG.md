@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.6 - 2026-09-01
+
+- Fixed sumX syntax highlighting in the xBase language profile: sumIDE now selects the dedicated `sumx` lexer instead of the generic Pygments FoxPro lexer.
+- `#` comments are therefore highlighted atomically as comments, so keywords such as `THEN` and `AND` inside a comment no longer receive keyword/operator colours.
+- The generic `xBase / FoxPro` syntax mode remains available in `sumedit` for classic FoxPro source.
+
 ## 0.2.5 - 2026-09-01
 
 - Updated the common IDE dependency to sumTUI 0.7.5 so bounded input fields in language backends share the corrected logical-end overwrite/auto-advance policy.

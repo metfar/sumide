@@ -51,7 +51,7 @@ _PROFILES = {
     "python": LanguageProfile("python", "Python", (".py", ".pyw"), syntax="python", runner=("python", "{source}"), aliases=("py", "python3")),
     "r": LanguageProfile("r", "R", (".r", ".R"), syntax="r", runner=("Rscript", "--vanilla", "{source}"), aliases=("rscript",)),
     "ruby": LanguageProfile("ruby", "Ruby", (".rb", ".ruby"), syntax="ruby", runner=("ruby", "{source}"), aliases=("rb",)),
-    "xbase": LanguageProfile("xbase", "xBase", (".prg", ".ch"), syntax="xbase", runner=("python-module", "sumx", "--run", "{source}"), aliases=("sumx", "dbase"), help_module="sumx.helpdb"),
+    "xbase": LanguageProfile("xbase", "xBase", (".prg", ".ch"), syntax="sumx", runner=("python-module", "sumx", "--run", "{source}"), aliases=("sumx", "dbase"), help_module="sumx.helpdb"),
 };
 
 _ALIASES = {};

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "sumide"
-version = "0.2.5"
+version = "0.2.6"
 description = "Multi-language IDE for the Sum ecosystem, extracted from the historical sumTUI/sumX/sumBASIC editors."
 readme = "README.md"
 requires-python = ">=3.8"

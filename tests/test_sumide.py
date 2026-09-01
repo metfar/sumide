@@ -23,6 +23,9 @@ def test_profiles_cover_requested_languages():
     assert language_from_path("hello.cxx") == "cpp";
     assert get_profile("html").indent_width == 2;
     assert get_profile("python").indent_width == 4;
+    # The sumX/xBase runtime is a modern dialect: its IDE profile must use
+    # the dedicated sumX lexer, not the generic Pygments FoxPro lexer.
+    assert get_profile("xbase").syntax == "sumx";
 
 
 def test_safe_vim_modeline_subset():

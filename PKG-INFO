@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: sumide
-Version: 0.2.5
+Version: 0.2.6
 Summary: Multi-language IDE for the Sum ecosystem, extracted from the historical sumTUI/sumX/sumBASIC editors.
 Author-email: William Martinez Bas <metfar@gmail.com>
 License: GPL-2.0-or-later
