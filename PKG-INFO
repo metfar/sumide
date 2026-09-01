@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: sumide
-Version: 0.2.4
+Version: 0.2.5
 Summary: Multi-language IDE for the Sum ecosystem, extracted from the historical sumTUI/sumX/sumBASIC editors.
 Author-email: William Martinez Bas <metfar@gmail.com>
 License: GPL-2.0-or-later
@@ -12,7 +12,7 @@ Classifier: Topic :: Software Development :: Integrated Development Environments
 Requires-Python: >=3.8
 Description-Content-Type: text/markdown
 License-File: LICENSE
-Requires-Dist: sumtui>=0.7.4
+Requires-Dist: sumtui>=0.7.5
 Requires-Dist: rich>=13.0
 Dynamic: license-file
 

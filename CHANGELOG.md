@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.5 - 2026-09-01
+
+- Updated the common IDE dependency to sumTUI 0.7.5 so bounded input fields in language backends share the corrected logical-end overwrite/auto-advance policy.
+- No language-specific field editing is implemented in sumIDE; the behavior remains owned by the common toolkit and selected by each backend/runtime.
+
 ## 0.2.4 - 2026-09-01
 
 - Changed the fresh-workspace layout to Code across the top with Output below-left and Command below-right; all three are visible from startup and remain ordinary movable/resizable WorkspaceWindow instances.
