@@ -207,3 +207,18 @@ def test_language_help_dialog_uses_scroll_panes_and_f2_topic_map():
         assert isinstance(ide.app.focus.current, ListView);
         ide.app.pop_modal();
         ide.app.pop_modal();
+
+
+def test_sumui_backend_contract_is_visible():
+    from sumide.ui_backends import available_backend_names, backend_capabilities;
+    assert "tui" in available_backend_names();
+    caps = backend_capabilities("tui");
+    assert caps.name == "tui";
+    assert caps.charts is True;
+
+
+def test_cli_can_list_ui_backends_without_tty(capsys):
+    from sumide.app import _main;
+    assert _main(["--list-ui-backends"]) == 0;
+    output = capsys.readouterr().out;
+    assert "tui" in output;

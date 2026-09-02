@@ -44,6 +44,7 @@ from sumtui.clipboard import clipboard;
 from sumtui.tools.edit import EditApp, _EditorHScroll, _EditorVScroll;
 
 from . import __version__;
+from .ui_backends import available_backend_names, backend_capabilities;
 from .config import load_config as load_ide_config, save_config as save_ide_config;
 from .profiles import canonical_language, get_profile, language_choices, language_from_path;
 from .templates import TemplateManager;
@@ -1286,6 +1287,7 @@ def _main(argv=None, forced_language=None, prog="sumide"):
     parser.add_argument("--language", default=canonical_language(forced_language or "auto"), help="language profile (auto, basic, xbase, python, r, bash, c, cxx/cpp, html, javascript, php, ruby)");
     parser.add_argument("--theme", default=None, help="sumTUI theme");
     parser.add_argument("--list-languages", action="store_true", help="list installed language profiles and exit");
+    parser.add_argument("--list-ui-backends", action="store_true", help="list available Sum UI backends and exit");
     parser.add_argument("--version", action="version", version="%(prog)s {}".format(__version__));
     args = parser.parse_args(argv);
     language = canonical_language(forced_language or args.language);
@@ -1293,6 +1295,11 @@ def _main(argv=None, forced_language=None, prog="sumide"):
         for key in language_choices():
             profile = get_profile(key);
             print("{}\t{}".format(profile.id, profile.label));
+        return 0;
+    if args.list_ui_backends:
+        for name in available_backend_names():
+            caps = backend_capabilities(name);
+            print("{}\t{}\tcharts={} graphics={}".format(caps.name, caps.family, int(caps.charts), int(caps.graphics)));
         return 0;
     if not sys.stdin.isatty() or not sys.stdout.isatty():
         print("{} requires an interactive terminal".format(prog), file=sys.stderr);
