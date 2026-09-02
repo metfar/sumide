@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>Sum chart contract</title></head>
+<body>
+<pre id="chart"></pre>
+<script>
+const chart = {
+  schema: "sum.chart/1",
+  kind: "bar",
+  title: "Shared chart from HTML/JavaScript",
+  categories: ["A", "B", "C"],
+  series: [{name: "value", values: [25, 50, 35], x_values: []}]
+};
+document.getElementById("chart").textContent = JSON.stringify(chart, null, 2);
+</script>
+</body>
+</html>

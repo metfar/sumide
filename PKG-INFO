@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: sumide
-Version: 0.2.7
+Version: 0.2.8
 Summary: Multi-language IDE for the Sum ecosystem, extracted from the historical sumTUI/sumX/sumBASIC editors.
 Author-email: William Martinez Bas <metfar@gmail.com>
 License: GPL-2.0-or-later
@@ -12,11 +12,11 @@ Classifier: Topic :: Software Development :: Integrated Development Environments
 Requires-Python: >=3.8
 Description-Content-Type: text/markdown
 License-File: LICENSE
-Requires-Dist: sumui>=0.1.0a2
-Requires-Dist: sumtui>=0.8.0a2
+Requires-Dist: sumui>=0.1.0a3
+Requires-Dist: sumtui>=0.8.0a3
 Requires-Dist: rich>=13.0
 Provides-Extra: gui
-Requires-Dist: sumgui>=0.2.0a2; extra == "gui"
+Requires-Dist: sumgui>=0.2.0a3; extra == "gui"
 Dynamic: license-file
 
 # sumIDE 0.2.4
@@ -53,6 +53,15 @@ The default layout uses the `sumide-v2` workspace namespace so older saved layou
 ## Programming examples
 
 Language-level sample programs belong to sumIDE rather than sumTUI. The source distribution includes `examples/hello.*` files for the supported profiles plus launcher examples under `examples/launchers/`. sumTUI keeps only examples that demonstrate the toolkit itself (widgets, `sumedit`, `suminput`, `sumdialog`, themes, and related TUI facilities).
+
+The `examples/charts/` directory demonstrates the language-neutral `sum.chart/1` contract from Python, R, Bash, C, C++, JavaScript, PHP, Ruby, sumBASIC and sumX, plus an HTML/document example. Executable producers write the same JSON schema, so their output can be sent unchanged to either backend:
+
+```bash
+python examples/charts/chart.py | sumchart --backend=tui
+python examples/charts/chart.py | sumchart --backend=gui
+```
+
+The same two commands work with the output of the other language examples. This is the reference pattern for future sumC, sumCPP, sumASM, sumPY and sumR bindings: languages produce shared contracts; renderers remain backend-specific.
 
 ## Context-sensitive language help
 

@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.8 - 2026-09-02
+
+- Added `examples/charts/` showing the same `sum.chart/1` contract emitted from Python, R, Bash, C, C++, JavaScript, PHP, Ruby, sumBASIC and sumX, plus an HTML/document example.
+- Documented the paired rendering workflow: pipe any producer to `sumchart --backend=tui` or `sumchart --backend=gui` without changing the source-side data contract.
+- Treats these examples as the reference model for future sumC, sumCPP, sumASM, sumPY and sumR bindings.
+
 ## 0.2.6 - 2026-09-01
 
 - Fixed sumX syntax highlighting in the xBase language profile: sumIDE now selects the dedicated `sumx` lexer instead of the generic Pygments FoxPro lexer.

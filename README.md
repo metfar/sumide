@@ -33,6 +33,15 @@ The default layout uses the `sumide-v2` workspace namespace so older saved layou
 
 Language-level sample programs belong to sumIDE rather than sumTUI. The source distribution includes `examples/hello.*` files for the supported profiles plus launcher examples under `examples/launchers/`. sumTUI keeps only examples that demonstrate the toolkit itself (widgets, `sumedit`, `suminput`, `sumdialog`, themes, and related TUI facilities).
 
+The `examples/charts/` directory demonstrates the language-neutral `sum.chart/1` contract from Python, R, Bash, C, C++, JavaScript, PHP, Ruby, sumBASIC and sumX, plus an HTML/document example. Executable producers write the same JSON schema, so their output can be sent unchanged to either backend:
+
+```bash
+python examples/charts/chart.py | sumchart --backend=tui
+python examples/charts/chart.py | sumchart --backend=gui
+```
+
+The same two commands work with the output of the other language examples. This is the reference pattern for future sumC, sumCPP, sumASM, sumPY and sumR bindings: languages produce shared contracts; renderers remain backend-specific.
+
 ## Context-sensitive language help
 
 `F1` follows the active source buffer. BASIC buffers load the help corpus provided by `sumbasic`; xBase buffers load the help corpus provided by `sumx`. The language package owns its reference text while sumIDE owns the common explorer UI, so adding another native Sum language does not require duplicating the help window.

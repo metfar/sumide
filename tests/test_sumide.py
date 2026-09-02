@@ -222,3 +222,15 @@ def test_cli_can_list_ui_backends_without_tty(capsys):
     assert _main(["--list-ui-backends"]) == 0;
     output = capsys.readouterr().out;
     assert "tui" in output;
+
+
+def test_shared_chart_examples_cover_language_profiles():
+    root = Path(__file__).resolve().parents[1] / "examples" / "charts";
+    expected = {
+        "chart.py", "chart.R", "chart.sh", "chart.c", "chart.cpp", "chart.js",
+        "chart.php", "chart.rb", "chart.bas", "chart.prg", "chart.html", "README.md",
+    };
+    assert expected.issubset({item.name for item in root.iterdir()});
+    for name in expected - {"README.md"}:
+        text = (root / name).read_text(encoding="utf-8");
+        assert "sum.chart/1" in text;
