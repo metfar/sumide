@@ -57,7 +57,7 @@ def main():
     theme = DEFAULT_THEME;
     font_big = scale.font(30, bold=True);
     font = scale.font(18, bold=True);
-    status = StatusBar(scale.rect(0, 1220, 720, 60), font, theme=theme, zones=[{"text":"READY", "width":-1}, {"text":"ROW 0", "width":130}, {"text":"COL 0", "width":130}, {"text":"SUMGUI 0.2.0a7", "width":230, "align":"right"}]);
+    status = StatusBar(scale.rect(0, 1220, 720, 60), font, theme=theme, zones=[{"text":"READY", "width":-1}, {"text":"ROW 0", "width":130}, {"text":"COL 0", "width":130}, {"text":"SUMGUI 0.2.0a8", "width":230, "align":"right"}]);
 
     def set_status(text):
         status.set_zone(0, text);
@@ -103,9 +103,9 @@ def main():
             prev = (sx, sy);
 
     def canvas_event(canvas, event):
-        if event.type == pygame.MOUSEBUTTONDOWN and canvas.rect.collidepoint(event.pos):
+        if event.type == pygame.MOUSEBUTTONDOWN and canvas.get_rect().collidepoint(event.pos):
             local = canvas.local_pos(event.pos);
-            r = canvas.rect.inflate(-8, -8);
+            r = canvas.get_rect().inflate(-8, -8);
             x = int((local[0] - 8) * 180 / max(1, r.width));
             y = int((r.height - (local[1] - 8)) * 90 / max(1, r.height));
             canvas_points.append((max(0, min(180, x)), max(0, min(90, y))));

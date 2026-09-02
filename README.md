@@ -94,4 +94,9 @@ sumide --gui
 
 Both forms create the same IDE application, buffers, windows, menus, editor/highlighter, help system, preferences, keybindings and theme. The TUI remains terminal-first and supports both keyboard and mouse; the GUI backend provides graphical keyboard/mouse/touch presentation of the same state.
 
+
+## Graphical image export
+
+When sumIDE is running through `--gui`, **File -> Export graphical window as PNG...** exports the current graphical application window. This uses the common Sum application backend; it is not a separate GUI-only application implementation.
+
 <p align=center><b>- oOo -<b></p>

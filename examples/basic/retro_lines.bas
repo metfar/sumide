@@ -8,8 +8,7 @@
 # Escape, Q or q exits when run through the Sum GUI/IDE application.
 
 SCREEN 320, 240
-PAPER 0
-BORDER 0
+COLOR 7, 0, 0
 
 X1 = 20:  Y1 = 30
 X2 = 285: Y2 = 200

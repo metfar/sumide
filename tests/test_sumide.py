@@ -288,3 +288,18 @@ def test_sumide_run_autostarts_active_language_backend(monkeypatch, tmp_path):
     monkeypatch.setattr(app_module, "_ide_class_for", lambda language: FakeIDE);
     assert app_module._main(["--gui", "--run", str(source)]) == 0;
     assert observed == {"ran": True, "backend": "gui"};
+
+
+def test_file_menu_exposes_graphical_png_export():
+    with tempfile.TemporaryDirectory() as directory:
+        ide = ScriptIDE(None, language="python", sumide_config_path=Path(directory) / "config.json");
+        file_menu = next(menu for menu in ide._menus() if menu.title == "File");
+        labels = [item.label for item in file_menu.items if getattr(item, "label", "")];
+        assert "Export graphical window as PNG..." in labels;
+
+
+def test_r16_basic_and_sumgui_examples_are_available_from_sumide():
+    root = Path(__file__).resolve().parents[1] / "examples";
+    assert (root / "basic" / "graphics_image_ops.bas").exists();
+    assert (root / "basic" / "charts_tables.bas").exists();
+    assert (root / "python" / "sumgui" / "demo_report_dashboard.py").exists();

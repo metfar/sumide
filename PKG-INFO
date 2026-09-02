@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: sumide
-Version: 0.2.12
+Version: 0.2.13
 Summary: Multi-language IDE for the Sum ecosystem, extracted from the historical sumTUI/sumX/sumBASIC editors.
 Author-email: William Martinez Bas <metfar@gmail.com>
 License: GPL-2.0-or-later
@@ -12,11 +12,11 @@ Classifier: Topic :: Software Development :: Integrated Development Environments
 Requires-Python: >=3.8
 Description-Content-Type: text/markdown
 License-File: LICENSE
-Requires-Dist: sumui>=0.1.0a6
-Requires-Dist: sumtui>=0.8.0a7
+Requires-Dist: sumui>=0.1.0a7
+Requires-Dist: sumtui>=0.8.0a8
 Requires-Dist: rich>=13.0
 Provides-Extra: gui
-Requires-Dist: sumgui>=0.2.0a8; extra == "gui"
+Requires-Dist: sumgui>=0.2.0a9; extra == "gui"
 Dynamic: license-file
 
 # sumIDE 0.2.9
@@ -114,5 +114,10 @@ sumide --gui
 ```
 
 Both forms create the same IDE application, buffers, windows, menus, editor/highlighter, help system, preferences, keybindings and theme. The TUI remains terminal-first and supports both keyboard and mouse; the GUI backend provides graphical keyboard/mouse/touch presentation of the same state.
+
+
+## Graphical image export
+
+When sumIDE is running through `--gui`, **File -> Export graphical window as PNG...** exports the current graphical application window. This uses the common Sum application backend; it is not a separate GUI-only application implementation.
 
 <p align=center><b>- oOo -<b></p>
