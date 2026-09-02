@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.2.11 - 2026-09-02
+## 0.2.12 - 2026-09-02
 - Fresh sumIDE configurations now use ZX as the common default theme in both TUI and `--gui` mode.
 - Updated the coordinated UI dependency floor to sumUI 0.1.0a5, sumTUI 0.8.0a6 and optional sumGUI 0.2.0a7.
 - Bundled SumGUI Python examples were synchronized with the ZX defaults.

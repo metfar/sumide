@@ -234,3 +234,57 @@ def test_shared_chart_examples_cover_language_profiles():
     for name in expected - {"README.md"}:
         text = (root / name).read_text(encoding="utf-8");
         assert "sum.chart/1" in text;
+
+
+def test_sumide_auto_selects_basic_backend_and_gui(monkeypatch, tmp_path):
+    import sumide.app as app_module;
+    source = tmp_path / "demo.bas";
+    source.write_text('PRINT "hello"\n', encoding="utf-8");
+    observed = {};
+    class FakeApplication:
+        def __init__(self): self.idle = [];
+        def add_idle(self, callback): self.idle.append(callback);
+        def remove_idle(self, callback):
+            if callback in self.idle: self.idle.remove(callback);
+    class FakeIDE:
+        def __init__(self, path=None, theme=None, **kwargs):
+            observed["path"] = str(path);
+            observed["kwargs"] = kwargs;
+            self.app = FakeApplication();
+            self.ran = False;
+        def open_path(self, source, activate=False): return True;
+        def run_program(self): self.ran = True; observed["run_program"] = True; return True;
+        def run(self, backend="tui"):
+            observed["backend"] = backend;
+            for callback in list(self.app.idle): callback();
+            return 0;
+    def choose(language):
+        observed["language"] = language;
+        return FakeIDE;
+    monkeypatch.setattr(app_module, "_ide_class_for", choose);
+    assert app_module._main(["--gui", str(source)]) == 0;
+    assert observed["language"] == "basic";
+    assert observed["backend"] == "gui";
+
+
+def test_sumide_run_autostarts_active_language_backend(monkeypatch, tmp_path):
+    import sumide.app as app_module;
+    source = tmp_path / "demo.bas";
+    source.write_text('PRINT "hello"\n', encoding="utf-8");
+    observed = {};
+    class FakeApplication:
+        def __init__(self): self.idle = [];
+        def add_idle(self, callback): self.idle.append(callback);
+        def remove_idle(self, callback):
+            if callback in self.idle: self.idle.remove(callback);
+    class FakeIDE:
+        def __init__(self, path=None, theme=None, **kwargs): self.app = FakeApplication();
+        def open_path(self, source, activate=False): return True;
+        def run_program(self): observed["ran"] = True; return True;
+        def run(self, backend="tui"):
+            for callback in list(self.app.idle): callback();
+            observed["backend"] = backend;
+            return 0;
+    monkeypatch.setattr(app_module, "_ide_class_for", lambda language: FakeIDE);
+    assert app_module._main(["--gui", "--run", str(source)]) == 0;
+    assert observed == {"ran": True, "backend": "gui"};

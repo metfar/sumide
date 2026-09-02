@@ -60,7 +60,7 @@ def main():
         def next_theme(widget):
             current[0] = (current[0] + 1) % len(names);
         panel.add(Button(pygame.Rect(30, 100, 240, 70), "NEXT THEME", font, next_theme, theme));
-        panel.add(Label(pygame.Rect(30, 200, 620, 120), "ZX, DOS, C64, MSX, Dark, Light\nPress button, Enter or Space.", font, theme));
+        panel.add(Label(pygame.Rect(30, 200, 620, 120), "ZX, DOS, XBASE, C64, Dark, Light\nPress button, Enter or Space.", font, theme));
         return panel;
 
     panel = build_panel();

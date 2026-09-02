@@ -164,6 +164,7 @@ class ScriptIDE(EditApp):
         general_config = self.sumide_config.get("general", {});
         selected_theme = theme or general_config.get("theme");
         super().__init__(path=path, theme=selected_theme, config_path=self.sumide_config_path, **kwargs);
+        self.app.title = "sumIDE";
         editor_config = self.sumide_config.get("editor", {});
         profile = get_profile(self.language);
         language_config = self.sumide_config.get("languages", {}).get(self.language, {});
@@ -1288,6 +1289,7 @@ def _main(argv=None, forced_language=None, prog="sumide"):
     parser.add_argument("files", nargs="*", help="source files; different languages may be opened together in sumide");
     parser.add_argument("--language", default=canonical_language(forced_language or "auto"), help="language profile (auto, basic, xbase, python, r, bash, c, cxx/cpp, html, javascript, php, ruby)");
     parser.add_argument("--theme", default=None, help="Sum theme");
+    parser.add_argument("--run", action="store_true", help="run the opened source after the IDE starts");
     add_backend_arguments(parser);
     parser.add_argument("--list-languages", action="store_true", help="list installed language profiles and exit");
     parser.add_argument("--list-ui-backends", action="store_true", help="list available Sum UI backends and exit");
@@ -1310,14 +1312,32 @@ def _main(argv=None, forced_language=None, prog="sumide"):
         return 2;
     try:
         files = list(args.files or []);
-        ide_class = _ide_class_for(language);
+        if args.run and len(files) != 1:
+            parser.error("--run requires exactly one source file");
         first = files[0] if files else None;
+        resolved_language = language;
+        if resolved_language == "auto" and first is not None:
+            resolved_language = canonical_language(language_from_path(first));
+        # A single BASIC/xBase document gets its language runtime backend.
+        # Mixed-language workspaces remain the generic ScriptIDE shell.
+        backend_language = resolved_language if (len(files) <= 1 or forced_language is not None) else "auto";
+        ide_class = _ide_class_for(backend_language);
         if ide_class is ScriptIDE:
-            ide = ide_class(first, language=language, theme=args.theme);
+            ide = ide_class(first, language=resolved_language, theme=args.theme);
         else:
             ide = ide_class(first, theme=args.theme);
         for source in files[1:]:
             ide.open_path(source, activate=False);
+        if args.run:
+            fired = {"value": False};
+            def autorun():
+                if fired["value"]:
+                    return False;
+                fired["value"] = True;
+                ide.app.remove_idle(autorun);
+                ide.run_program();
+                return True;
+            ide.app.add_idle(autorun);
         return ide.run(backend=ui_backend);
     except Exception as exc:
         print("{}: {}".format(prog, exc), file=sys.stderr);

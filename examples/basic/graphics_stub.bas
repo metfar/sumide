@@ -1,0 +1,9 @@
+# First working sumUI/sumGUI graphics bridge.
+SCREEN 1
+PAPER 0
+INK 6
+BORDER 1
+CIRCLE 100, 100, 40
+RECTANGLE 20, 20, 180, 120
+PLOT 10, 10
+LINE (10, 150)-(220, 30)
