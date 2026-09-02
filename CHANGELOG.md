@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.2.11 - 2026-09-02
+- Fresh sumIDE configurations now use ZX as the common default theme in both TUI and `--gui` mode.
+- Updated the coordinated UI dependency floor to sumUI 0.1.0a5, sumTUI 0.8.0a6 and optional sumGUI 0.2.0a7.
+- Bundled SumGUI Python examples were synchronized with the ZX defaults.
+
+## 0.2.10 - 2026-09-02
+
+- Added the common `--gui`, `--tui` and `--ui-backend` presentation switches. `sumide --gui` starts the same `ScriptIDE`/language-specific IDE object and selects sumGUI only at render time.
+- Graphical mode therefore inherits the same menus, editor behavior, syntax highlighting, window model, help browser, keybindings, configuration and theme rather than maintaining a second graphical IDE.
+- Terminal mode remains the default and preserves mouse as well as keyboard input.
+- Requires sumUI 0.1.0a4 and sumTUI 0.8.0a5; the GUI extra targets sumGUI 0.2.0a6.
+
+## 0.2.9 - 2026-09-02
+
+- Added `examples/python/sumgui/` containing the sumGUI graphical demos as ordinary Python examples owned by the multi-language IDE example tree.
+- The graphical copies remain plain Python sources: sumGUI is a UI backend/toolkit, not a language profile.
+- Updated the common dependency baseline to sumTUI 0.8.0a4 and the optional GUI extra to sumGUI 0.2.0a4.
+
 ## 0.2.8 - 2026-09-02
 
 - Added `examples/charts/` showing the same `sum.chart/1` contract emitted from Python, R, Bash, C, C++, JavaScript, PHP, Ruby, sumBASIC and sumX, plus an HTML/document example.

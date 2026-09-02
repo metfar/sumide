@@ -4,13 +4,13 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "sumide"
-version = "0.2.8"
+version = "0.2.11"
 description = "Multi-language IDE for the Sum ecosystem, extracted from the historical sumTUI/sumX/sumBASIC editors."
 readme = "README.md"
 requires-python = ">=3.8"
 license = { text = "GPL-2.0-or-later" }
 authors = [{ name = "William Martinez Bas", email = "metfar@gmail.com" }]
-dependencies = ["sumui>=0.1.0a3", "sumtui>=0.8.0a3", "rich>=13.0"]
+dependencies = ["sumui>=0.1.0a5", "sumtui>=0.8.0a6", "rich>=13.0"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
@@ -20,7 +20,7 @@ classifiers = [
 ]
 
 [project.optional-dependencies]
-gui = ["sumgui>=0.2.0a3"]
+gui = ["sumgui>=0.2.0a7"]
 
 [project.scripts]
 sumide = "sumide.app:main"

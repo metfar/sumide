@@ -20,4 +20,30 @@
 #  MA 02110-1301, USA.
 #  
 #
-__version__ = "0.2.11";
+
+
+import math;
+import os;
+import sys;
+
+import pygame;
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")));
+
+
+import os;
+import sys;
+
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."));
+if PROJECT_ROOT not in sys.path:
+    sys.path.insert(0, PROJECT_ROOT);
+
+from sumgui.easy import *;
+
+
+window("SumGUI quick start", width=720, height=580, base_width=720, base_height=580, font_size=22, theme="ZX");
+say("READY.", 20, 20, 300, 40, font_size=28, bold=True);
+say("This is the beginner-friendly API.", 20, 70, 520, 34);
+button("ALERT", 20, 130, 180, 70, do=lambda: alert("Hello from SumGUI!"));
+textarea(20, 230, 660, 280, "Try accents: áéíóú àèìòù äëïöü ñ ç\nClipboard: Ctrl+C/X/V", font_size=20, accepts_tab=True);
+start();

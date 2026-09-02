@@ -36,6 +36,8 @@ import tempfile;
 import threading;
 import time;
 
+from sumui import add_backend_arguments, backend_from_args;
+
 from sumtui.document import TextDocument;
 from sumtui.symbols import detect_language;
 from sumtui.modeline import scan_vim_modelines;
@@ -1285,12 +1287,14 @@ def _main(argv=None, forced_language=None, prog="sumide"):
     parser = argparse.ArgumentParser(prog=prog, description="Multi-language IDE built with sumTUI");
     parser.add_argument("files", nargs="*", help="source files; different languages may be opened together in sumide");
     parser.add_argument("--language", default=canonical_language(forced_language or "auto"), help="language profile (auto, basic, xbase, python, r, bash, c, cxx/cpp, html, javascript, php, ruby)");
-    parser.add_argument("--theme", default=None, help="sumTUI theme");
+    parser.add_argument("--theme", default=None, help="Sum theme");
+    add_backend_arguments(parser);
     parser.add_argument("--list-languages", action="store_true", help="list installed language profiles and exit");
     parser.add_argument("--list-ui-backends", action="store_true", help="list available Sum UI backends and exit");
     parser.add_argument("--version", action="version", version="%(prog)s {}".format(__version__));
     args = parser.parse_args(argv);
     language = canonical_language(forced_language or args.language);
+    ui_backend = backend_from_args(args);
     if args.list_languages:
         for key in language_choices():
             profile = get_profile(key);
@@ -1301,8 +1305,8 @@ def _main(argv=None, forced_language=None, prog="sumide"):
             caps = backend_capabilities(name);
             print("{}\t{}\tcharts={} graphics={}".format(caps.name, caps.family, int(caps.charts), int(caps.graphics)));
         return 0;
-    if not sys.stdin.isatty() or not sys.stdout.isatty():
-        print("{} requires an interactive terminal".format(prog), file=sys.stderr);
+    if ui_backend == "tui" and (not sys.stdin.isatty() or not sys.stdout.isatty()):
+        print("{} TUI mode requires an interactive terminal; use --gui for the graphical backend".format(prog), file=sys.stderr);
         return 2;
     try:
         files = list(args.files or []);
@@ -1314,7 +1318,7 @@ def _main(argv=None, forced_language=None, prog="sumide"):
             ide = ide_class(first, theme=args.theme);
         for source in files[1:]:
             ide.open_path(source, activate=False);
-        return ide.run();
+        return ide.run(backend=ui_backend);
     except Exception as exc:
         print("{}: {}".format(prog, exc), file=sys.stderr);
         return 1;

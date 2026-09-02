@@ -39,7 +39,7 @@ def default_config_path():
 def defaults():
     return {
         "schema_version": SCHEMA_VERSION,
-        "general": {"default_language": "python", "restore_session": True, "confirm_exit": False, "theme": "Ralesk's MC"},
+        "general": {"default_language": "python", "restore_session": True, "confirm_exit": False, "theme": "ZX"},
         "editor": {
             "tab_width": 4,
             "indent_width": 4,

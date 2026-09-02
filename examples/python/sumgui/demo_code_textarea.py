@@ -20,4 +20,39 @@
 #  MA 02110-1301, USA.
 #  
 #
-__version__ = "0.2.11";
+
+
+
+import math;
+import os;
+import sys;
+
+import pygame;
+
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."));
+if PROJECT_ROOT not in sys.path:
+    sys.path.insert(0, PROJECT_ROOT);
+
+from sumgui.easy import *;
+
+
+CODE = """#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+def saludar(nombre):
+	print("Hola, " + nombre);
+
+for nombre in ["José", "François", "Jürgen", "Miyuki"]:
+	saludar(nombre);
+""";
+
+
+def main():
+    window("SumGUI Code TextArea", width=720, height=680, base_width=720, base_height=680, font_size=18);
+    label("Python TextArea: real tabs + simple vi-like colours", 20, 20, 660, 36);
+    textarea(20, 70, 660, 560, text=CODE, accepts_tab=True, tab_size=4, syntax="python");
+    start();
+
+
+if __name__ == "__main__":
+    main();

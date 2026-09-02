@@ -20,4 +20,22 @@
 #  MA 02110-1301, USA.
 #  
 #
-__version__ = "0.2.11";
+
+import sumgui.easy as sg;
+
+
+sg.window("Mi programa", 960,720);
+
+sg.label("Nombre:", 20, 20, 120, 60);
+nombre = sg.textinput(150, 20, 300, 40, placeholder="Nombre");
+print(type(nombre.text()));
+sg.button(
+    "Saludar",
+    20,
+    80,
+    140,
+    40,
+    do=lambda: sg.alert("Hola " + nombre.text()),
+);
+
+sg.start();

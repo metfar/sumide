@@ -1,4 +1,4 @@
-# sumIDE 0.2.4
+# sumIDE 0.2.9
 
 `sumIDE` is the common multi-language IDE for the Sum ecosystem. It is built on `sumTUI`, but it is a separate project: `sumTUI` owns reusable terminal UI/editor primitives and `sumIDE` owns IDE behavior, language profiles, templates, preferences, build/run integration and project-oriented features.
 
@@ -42,6 +42,8 @@ python examples/charts/chart.py | sumchart --backend=gui
 
 The same two commands work with the output of the other language examples. This is the reference pattern for future sumC, sumCPP, sumASM, sumPY and sumR bindings: languages produce shared contracts; renderers remain backend-specific.
 
+The `examples/python/sumgui/` tree also carries the graphical sumGUI demos as ordinary Python examples. The originals may remain with sumGUI as toolkit smoke/development demos, but the IDE-facing copies are classified under Python rather than inventing a “sumGUI language”.
+
 ## Context-sensitive language help
 
 `F1` follows the active source buffer. BASIC buffers load the help corpus provided by `sumbasic`; xBase buffers load the help corpus provided by `sumx`. The language package owns its reference text while sumIDE owns the common explorer UI, so adding another native Sum language does not require duplicating the help window.
@@ -80,5 +82,16 @@ The common File menu owns source-buffer lifecycle: New, Open, Save, Save As, and
 ### Language help browser
 
 Language-owned help opens in the common sumIDE browser.  Both the topic list and the rendered Markdown pane have scrollbars. **F2** opens the Topic Map from either side of the help browser, **F3** searches, and **F6 / Ctrl+C** copies the current functional example. The help provider follows the active buffer language.
+
+## TUI and GUI are the same IDE
+
+The backend is selected at runtime:
+
+```bash
+sumide
+sumide --gui
+```
+
+Both forms create the same IDE application, buffers, windows, menus, editor/highlighter, help system, preferences, keybindings and theme. The TUI remains terminal-first and supports both keyboard and mouse; the GUI backend provides graphical keyboard/mouse/touch presentation of the same state.
 
 <p align=center><b>- oOo -<b></p>
