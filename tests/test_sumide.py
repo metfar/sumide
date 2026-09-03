@@ -303,3 +303,14 @@ def test_r16_basic_and_sumgui_examples_are_available_from_sumide():
     assert (root / "basic" / "graphics_image_ops.bas").exists();
     assert (root / "basic" / "charts_tables.bas").exists();
     assert (root / "python" / "sumgui" / "demo_report_dashboard.py").exists();
+
+
+def test_r17_bgi_conio_display_and_font_examples_are_available_from_sumide():
+    root = Path(__file__).resolve().parents[1] / "examples";
+    for name in ("bgi_style_smile.bas", "console_positions.bas", "display_pages.bas"):
+        assert (root / "basic" / name).exists();
+    for branch in ("sumgui", "sumui"):
+        assert (root / "python" / branch / "demo_bgi_compat.py").exists();
+        assert (root / "python" / branch / "demo_conio_compat.py").exists();
+    source = (root / "python" / "sumgui" / "demo_report_dashboard.py").read_text(encoding="utf-8");
+    assert "FontSpec(size=10)" in source;

@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.14 - 2026-09-02
+
+- Synchronized r17 BASIC and Python BGI/conio/stdio examples and compact-font dashboard.
+- Coordinated dependencies with the r17 UI/TUI/GUI stack.
+
 ## 0.2.13 - 2026-09-02
 - Inherits graphical-window PNG export from the one-application Sum shell.
 - Added/synchronized sumBASIC graphics/image and chart/table examples and the SumGUI report-dashboard Python example.

@@ -99,4 +99,8 @@ Both forms create the same IDE application, buffers, windows, menus, editor/high
 
 When sumIDE is running through `--gui`, **File -> Export graphical window as PNG...** exports the current graphical application window. This uses the common Sum application backend; it is not a separate GUI-only application implementation.
 
+## r17 examples
+
+The packaged example library now includes the r17 BASIC DISPLAY/page-buffering, cursor-position and BGI-style drawing examples together with Python `sumui.bgi`, `sumui.conio` and stdio/conio demonstrations. The compact-font SumGUI report dashboard remains synchronized with the toolkit source example.
+
 <p align=center><b>- oOo -<b></p>

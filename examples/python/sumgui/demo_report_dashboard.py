@@ -12,7 +12,7 @@
 
 import pygame;
 
-from sumui import ChartSeries, ChartSpec, TableSpec, modern_mode;
+from sumui import ChartSeries, ChartSpec, FontSpec, TableSpec, modern_mode;
 from sumgui.graphics import GraphicsSurface;
 from sumgui.theme import DEFAULT_THEME;
 
@@ -24,12 +24,15 @@ def main():
     categories = ("Android", "Linux", "Windows");
     values = (500, 800, 600);
     rows = (("Android", 500), ("Linux", 800), ("Windows", 600));
-    surface.draw_table(20, 20, 260, 150, TableSpec(rows, ("OS", "Users"), "Users by OS"), theme=DEFAULT_THEME);
-    line = ChartSpec("line", title="Line", categories=categories, series=(ChartSeries("Users", values),));
-    bars = ChartSpec.bar(categories, values, title="Bars", name="Users");
-    hbars = ChartSpec("bar", title="Horizontal bars", categories=categories, series=(ChartSeries("Users", values),), options=(("orientation", "horizontal"),));
-    pie = ChartSpec.pie(categories, values, title="Pie", name="Users");
-    radar = ChartSpec.radar(categories, values, title="Radar", name="Users");
+    body_font = FontSpec(size=10);
+    title_font = FontSpec(size=12, bold=True);
+    tick_font = FontSpec(size=9);
+    surface.draw_table(20, 20, 260, 150, TableSpec(rows, ("OS", "Users"), "Users by OS", font=body_font, title_font=title_font, header_font=body_font), theme=DEFAULT_THEME);
+    line = ChartSpec("line", title="Line", categories=categories, series=(ChartSeries("Users", values),), font=body_font, title_font=title_font, tick_font=tick_font, legend_font=tick_font);
+    bars = ChartSpec("bar", title="Bars", categories=categories, series=(ChartSeries("Users", values),), font=body_font, title_font=title_font, tick_font=tick_font, legend_font=tick_font);
+    hbars = ChartSpec("bar", title="Horizontal bars", categories=categories, series=(ChartSeries("Users", values),), options=(("orientation", "horizontal"),), font=body_font, title_font=title_font, tick_font=tick_font, legend_font=tick_font);
+    pie = ChartSpec("pie", title="Pie", categories=categories, series=(ChartSeries("Users", values),), font=body_font, title_font=title_font, tick_font=tick_font, legend_font=tick_font);
+    radar = ChartSpec("radar", title="Radar", categories=categories, series=(ChartSeries("Users", values),), font=body_font, title_font=title_font, tick_font=tick_font, legend_font=tick_font);
     surface.draw_chart(300, 20, 300, 250, line, theme=DEFAULT_THEME);
     surface.draw_chart(620, 20, 300, 250, bars, theme=DEFAULT_THEME);
     surface.draw_chart(20, 300, 280, 250, hbars, theme=DEFAULT_THEME);

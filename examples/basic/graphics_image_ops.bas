@@ -2,15 +2,15 @@
 # Demonstrates COLOR, PAINT/FILL, GET/PUT and BSAVE.
 # Run with: sumbasic --gui --run examples/graphics_image_ops.bas
 
-SCREEN 640, 480
-COLOR 15, 0, 0
+DISPLAY 640,480,65536,AUTO
+COLOR 15,1,1
 CLS
 
 # Draw and fill two boxes.
-RECTANGLE 40, 40, 180, 120, 14
-PAINT (50, 50), 1, 14
-RECTANGLE 260, 60, 160, 100, 10
-FILL (270, 70), 4, 10
+RECTANGLE 40, 40, 180, 120, 11
+PAINT (50, 50), 3, 11
+RECTANGLE 260, 60, 160, 100, 13
+FILL (270, 70), 5, 13
 
 # Copy regions directly, without an intermediate variable.
 PUT (80, 240), GET(40, 40, 180, 120)
