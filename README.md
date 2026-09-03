@@ -102,5 +102,8 @@ When sumIDE is running through `--gui`, **File -> Export graphical window as PNG
 ## r17 examples
 
 The packaged example library now includes the r17 BASIC DISPLAY/page-buffering, cursor-position and BGI-style drawing examples together with Python `sumui.bgi`, `sumui.conio` and stdio/conio demonstrations. The compact-font SumGUI report dashboard remains synchronized with the toolkit source example.
+## SumGUI chart renderer examples
+
+The Python examples include matching native, Matplotlib and Seaborn report dashboards driven by one shared `ChartSpec` model. The BASIC examples include the same simplified named `CHART` syntax for each renderer.
 
 <p align=center><b>- oOo -<b></p>

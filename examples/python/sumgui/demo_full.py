@@ -37,7 +37,7 @@ PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."));
 if PROJECT_ROOT not in sys.path:
     sys.path.insert(0, PROJECT_ROOT);
 
-from sumgui.display import fit_window_size;
+from sumgui.display import fit_window_size, set_default_icon;
 from sumgui import BarChart, Button, CanvasArea, DEFAULT_THEME, GridWidget, Label, LineChart, PaletteWidget, Panel, Scale, ScatterChart, Slider, StatusBar, TextArea, ToolBar, enable_key_repeat, get_events, message_box;
 
 BASE_WIDTH = 720;
@@ -49,6 +49,7 @@ WIDTH = int(BASE_WIDTH * (HEIGHT / BASE_HEIGHT));
 def main():
     pygame.init();
     enable_key_repeat(250, 31);
+    set_default_icon();
     screen = pygame.display.set_mode(fit_window_size(WIDTH, HEIGHT));
     physical_width, physical_height = screen.get_size();
     pygame.display.set_caption("SumGUI Alpha Demo");

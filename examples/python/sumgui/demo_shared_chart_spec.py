@@ -11,12 +11,13 @@
 #
 
 import pygame;
-from sumgui.display import fit_window_size;
+from sumgui.display import fit_window_size, set_default_icon;
 
 from sumgui import ChartSpec, ChartView, DEFAULT_THEME;
 
 
 pygame.init();
+set_default_icon();
 screen = pygame.display.set_mode(fit_window_size(800, 480), pygame.RESIZABLE);
 font = pygame.font.SysFont("monospace", 16);
 spec = ChartSpec.bar(["A", "B", "C"], [25, 50, 35], title="Shared ChartSpec", y_label="Value");

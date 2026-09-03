@@ -31,7 +31,7 @@ IF Y2 <= 0 OR Y2 >= 239 THEN DY2 = -DY2
 C = C + 1
 IF C > 15 THEN C = 1
 
-PAUSE 1
+PAUSE .02
 K$ = INKEY$
 IF K$ = CHR$(27) OR K$ = "Q" OR K$ = "q" THEN SCREEN 0: END
 GOTO LOOP

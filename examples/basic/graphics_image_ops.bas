@@ -26,5 +26,5 @@ BSAVE "graphics_part.png", GET (40,40)-(219,159)
 BSAVE "graphics_tile.png", Tile
 
 PRINT "Saved graphics_full.png, graphics_part.png and graphics_tile.png"
-PAUSE 250
+PAUSE 5
 SCREEN 0

@@ -19,5 +19,5 @@ CHART "RADAR", 620, 300, 300, 250, Cats, Vals, "Radar", "Users", 9, 11, "monospa
 
 BSAVE "charts_tables.png", SCREEN
 PRINT "Saved charts_tables.png"
-PAUSE 300
+PAUSE .60
 SCREEN 0

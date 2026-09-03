@@ -15,5 +15,5 @@ ARC 320,220,220,320,55,15
 OUTTEXTXY 205,345,"sumBASIC / Sum BGI-style graphics",15,16,"monospace"
 
 BSAVE "bgi_style_smile.png", SCREEN
-PAUSE 250
+PAUSE 5
 SCREEN 0

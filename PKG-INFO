@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: sumide
-Version: 0.2.15
+Version: 0.2.16
 Summary: Multi-language IDE for the Sum ecosystem, extracted from the historical sumTUI/sumX/sumBASIC editors.
 Author-email: William Martinez Bas <metfar@gmail.com>
 License: GPL-2.0-or-later
@@ -12,11 +12,11 @@ Classifier: Topic :: Software Development :: Integrated Development Environments
 Requires-Python: >=3.8
 Description-Content-Type: text/markdown
 License-File: LICENSE
-Requires-Dist: sumui>=0.1.0a9
+Requires-Dist: sumui>=0.1.0a10
 Requires-Dist: sumtui>=0.8.0a10
 Requires-Dist: rich>=13.0
 Provides-Extra: gui
-Requires-Dist: sumgui>=0.2.0a11; extra == "gui"
+Requires-Dist: sumgui>=0.2.0a12; extra == "gui"
 Dynamic: license-file
 
 # sumIDE 0.2.9
@@ -123,5 +123,8 @@ When sumIDE is running through `--gui`, **File -> Export graphical window as PNG
 ## r17 examples
 
 The packaged example library now includes the r17 BASIC DISPLAY/page-buffering, cursor-position and BGI-style drawing examples together with Python `sumui.bgi`, `sumui.conio` and stdio/conio demonstrations. The compact-font SumGUI report dashboard remains synchronized with the toolkit source example.
+## SumGUI chart renderer examples
+
+The Python examples include matching native, Matplotlib and Seaborn report dashboards driven by one shared `ChartSpec` model. The BASIC examples include the same simplified named `CHART` syntax for each renderer.
 
 <p align=center><b>- oOo -<b></p>

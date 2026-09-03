@@ -1,3 +1,8 @@
+## 0.2.16
+
+- Synchronized SumGUI report-dashboard native/Matplotlib/Seaborn Python examples and simplified sumBASIC chart examples.
+- Coordinated optional GUI dependency with SumGUI 0.2.0a12 and sumUI 0.1.0a10.
+
 # Changelog
 
 ## 0.2.14 - 2026-09-02

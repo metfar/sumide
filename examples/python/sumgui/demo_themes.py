@@ -28,7 +28,7 @@ import sys;
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")));
 
 import pygame;
-from sumgui.display import fit_window_size;
+from sumgui.display import fit_window_size, set_default_icon;
 
 
 import os;
@@ -43,6 +43,7 @@ from sumgui import Button, Label, Panel, Scale, THEMES, enable_key_repeat, get_e
 
 def main():
     pygame.init();
+    set_default_icon();
     screen = pygame.display.set_mode(fit_window_size(720, 720));
     physical_width, physical_height = screen.get_size();
     pygame.display.set_caption("SumGUI themes");

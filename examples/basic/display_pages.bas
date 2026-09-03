@@ -9,11 +9,11 @@ OUTTEXTXY 185,390,"Prepared off-screen on page 1",15,16,"monospace"
 # Page 0 remains visible while page 1 is drawn. Flip when complete.
 DISPLAY VISIBLE 1
 DISPLAY UPDATE
-PAUSE 150
+PAUSE 3
 
 # Copy page 1 back to page 0 and display it.
 COPY SCREEN FROM 1 TO 0
 DISPLAY VISIBLE 0
 DISPLAY UPDATE
-PAUSE 150
+PAUSE 3
 SCREEN 0
