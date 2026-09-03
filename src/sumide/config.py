@@ -23,6 +23,8 @@
 """Central sumIDE configuration.""";
 import json;
 import os;
+import shutil;
+import sys;
 from pathlib import Path;
 
 
@@ -72,7 +74,11 @@ def defaults():
         },
         "keybindings": {},
         "terminal": {"shell": os.environ.get("SHELL", "/bin/bash"), "scrollback": 500},
-        "languages": {"html": {"tab_width": 2, "indent_width": 2, "soft_tab_width": 2, "expand_tabs": True}},
+        "languages": {
+            "html": {"tab_width": 2, "indent_width": 2, "soft_tab_width": 2, "expand_tabs": True},
+            "python": {"runtime": "python", "executable": ""},
+            "r": {"runtime": "sumR", "executable": ""},
+        },
     };
 
 
@@ -105,3 +111,20 @@ def save_config(data, path=None):
     temporary.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8");
     temporary.replace(target);
     return target;
+
+
+def detect_initial_python():
+    return shutil.which("python") or shutil.which("python3") or sys.executable;
+
+def resolve_language_runner(config, language):
+    languages=dict((config or {}).get("languages", {}) or {});
+    key=str(language).lower(); settings=dict(languages.get(key,{}) or {});
+    if key == "python":
+        runtime=str(settings.get("runtime","python") or "python");
+        if runtime.lower()=="sumpy": return [shutil.which("sumPY") or shutil.which("sumpy") or "sumPY"];
+        executable=str(settings.get("executable","") or "").strip() or detect_initial_python(); return [executable];
+    if key == "r":
+        runtime=str(settings.get("runtime","sumR") or "sumR");
+        if runtime.lower()=="rscript": return [str(settings.get("executable","") or shutil.which("Rscript") or "Rscript"), "--vanilla"];
+        return [str(settings.get("executable","") or shutil.which("sumR") or shutil.which("sumr") or "sumR")];
+    return [];

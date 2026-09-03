@@ -1,3 +1,7 @@
+# r20 coordinated release
+
+- Aligned with SUM r20 architecture and package versions.
+
 ## 0.2.16
 
 - Synchronized SumGUI report-dashboard native/Matplotlib/Seaborn Python examples and simplified sumBASIC chart examples.

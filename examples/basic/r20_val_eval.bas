@@ -1,0 +1,4 @@
+10 a=VAL("2+2")
+20 PRINT a
+30 b=EVAL("a+2")
+40 PRINT b

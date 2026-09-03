@@ -47,7 +47,7 @@ from sumtui.tools.edit import EditApp, _EditorHScroll, _EditorVScroll;
 
 from . import __version__;
 from .ui_backends import available_backend_names, backend_capabilities;
-from .config import load_config as load_ide_config, save_config as save_ide_config;
+from .config import resolve_language_runner, load_config as load_ide_config, save_config as save_ide_config;
 from .profiles import canonical_language, get_profile, language_choices, language_from_path;
 from .templates import TemplateManager;
 from .config import default_config_path;
@@ -882,7 +882,11 @@ class ScriptIDE(EditApp):
         profile = get_profile(self.language);
         if profile is None or not profile.runner:
             raise RuntimeError("{} does not define a run command".format(self._language_label()));
-        parts = list(profile.runner);
+        configured = resolve_language_runner(self.sumide_config, profile.id);
+        if profile.id in ("python", "r") and configured:
+            parts = configured + ["{source}"];
+        else:
+            parts = list(profile.runner);
         if parts and parts[0] == "python":
             parts[0] = sys.executable;
         elif parts and parts[0] == "python-module":

@@ -1,0 +1,3 @@
+DISPLAY 640,480,65536,AUTO
+CHART STACKED BAR TITLE "Quarterly totals" X "Q1","Q2","Q3" Y [10,20,30],[5,12,18] SERIES "North","South"
+PAUSE 0
