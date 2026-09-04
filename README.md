@@ -107,3 +107,5 @@ The packaged example library now includes the r17 BASIC DISPLAY/page-buffering, 
 The Python examples include matching native, Matplotlib and Seaborn report dashboards driven by one shared `ChartSpec` model. The BASIC examples include the same simplified named `CHART` syntax for each renderer.
 
 <p align=center><b>- oOo -<b></p>
+
+<p align=center><b>- oOo -</b></p>

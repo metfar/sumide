@@ -1219,14 +1219,30 @@ class ScriptIDE(EditApp):
         return None;
 
     def _finish_direct(self):
-        if self._direct_output:
-            for line in self._direct_output.rstrip("\n").splitlines():
-                self.command_view.write(line, style="command");
-        if self._direct_error is not None:
-            self.command_view.write_error("Error: {}".format(self._direct_error));
-            self._update_status("Direct command error");
+        # xBase direct commands use COMMAND as command entry/history only;
+        # their observable stdout/stderr belongs in OUTPUT.  Other profiles
+        # keep their established interactive-console behavior (notably the
+        # Python REPL, whose expression results intentionally remain in
+        # COMMAND).
+        if self.language == "xbase":
+            if self._direct_output:
+                self._append_output(self._direct_output);
+                self.workspace.show(self.output_window);
+            if self._direct_error is not None:
+                self._append_output("Error: {}\n".format(self._direct_error));
+                self.workspace.show(self.output_window);
+                self._update_status("Direct command error");
+            else:
+                self._update_status("Direct command complete");
         else:
-            self._update_status("Direct command complete");
+            if self._direct_output:
+                for line in self._direct_output.rstrip("\n").splitlines():
+                    self.command_view.write(line, style="command");
+            if self._direct_error is not None:
+                self.command_view.write_error("Error: {}".format(self._direct_error));
+                self._update_status("Direct command error");
+            else:
+                self._update_status("Direct command complete");
         self._direct_thread = None;
         self._direct_done = False;
         self.app.invalidate();

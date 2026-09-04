@@ -170,3 +170,5 @@ The following work predates `sumIDE 0.1.0a1`. It was originally released inside 
 ### sumX pre-0.1.16 - 2026
 
 - Developed the xBase-oriented editor/interactive workspace on top of sumTUI alongside the interpreter/database runtime. At 0.1.16 the source-editor shell moves to sumIDE while xBase execution, compilation and database semantics remain in sumX.
+
+<p align=center><b>- oOo -</b></p>

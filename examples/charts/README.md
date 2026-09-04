@@ -33,3 +33,5 @@ Replace `--backend=tui` with `--backend=gui` for the graphical renderer.  `sumch
 The HTML example embeds the same contract for browser/document-oriented work; its JSON can be passed to `sumchart` by any host or script that extracts the `<script>` object.
 
 <p align=center><b>- oOo -<b></p>
+
+<p align=center><b>- oOo -</b></p>
