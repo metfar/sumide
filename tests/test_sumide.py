@@ -314,3 +314,27 @@ def test_r17_bgi_conio_display_and_font_examples_are_available_from_sumide():
         assert (root / "python" / branch / "demo_conio_compat.py").exists();
     source = (root / "python" / "sumgui" / "demo_report_dashboard.py").read_text(encoding="utf-8");
     assert "FontSpec(size=10)" in source;
+
+
+def test_r211_run_forwards_program_args_after_double_dash(monkeypatch, tmp_path):
+    import sumide.app as app_module;
+    source = tmp_path / "demo.bas";
+    source.write_text('PRINT COMMAND$\n', encoding="utf-8");
+    observed = {};
+    class FakeApplication:
+        def __init__(self): self.idle = [];
+        def add_idle(self, callback): self.idle.append(callback);
+        def remove_idle(self, callback):
+            if callback in self.idle: self.idle.remove(callback);
+    class FakeIDE:
+        def __init__(self, path=None, theme=None, **kwargs): self.app = FakeApplication();
+        def open_path(self, source, activate=False): return True;
+        def set_program_args(self, args): observed["args"] = list(args); return True;
+        def run_program(self): observed["ran"] = True; return True;
+        def run(self, backend="tui"):
+            for callback in list(self.app.idle): callback();
+            observed["backend"] = backend;
+            return 0;
+    monkeypatch.setattr(app_module, "_ide_class_for", lambda language: FakeIDE);
+    assert app_module._main(["--gui", "--run", str(source), "--", "--octava", "5"]) == 0;
+    assert observed == {"args": ["--octava", "5"], "ran": True, "backend": "gui"};

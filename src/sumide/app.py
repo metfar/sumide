@@ -1305,6 +1305,12 @@ def _ide_class_for(language):
 
 
 def _main(argv=None, forced_language=None, prog="sumide"):
+    raw_argv = list(sys.argv[1:] if argv is None else argv);
+    program_args = [];
+    if "--" in raw_argv:
+        separator = raw_argv.index("--");
+        program_args = raw_argv[separator + 1:];
+        raw_argv = raw_argv[:separator];
     parser = argparse.ArgumentParser(prog=prog, description="Multi-language IDE built with sumTUI");
     parser.add_argument("files", nargs="*", help="source files; different languages may be opened together in sumide");
     parser.add_argument("--language", default=canonical_language(forced_language or "auto"), help="language profile (auto, basic, xbase, python, r, bash, c, cxx/cpp, html, javascript, php, ruby)");
@@ -1314,7 +1320,7 @@ def _main(argv=None, forced_language=None, prog="sumide"):
     parser.add_argument("--list-languages", action="store_true", help="list installed language profiles and exit");
     parser.add_argument("--list-ui-backends", action="store_true", help="list available Sum UI backends and exit");
     parser.add_argument("--version", action="version", version="%(prog)s {}".format(__version__));
-    args = parser.parse_args(argv);
+    args = parser.parse_args(raw_argv);
     language = canonical_language(forced_language or args.language);
     ui_backend = backend_from_args(args);
     if args.list_languages:
@@ -1334,6 +1340,8 @@ def _main(argv=None, forced_language=None, prog="sumide"):
         files = list(args.files or []);
         if args.run and len(files) != 1:
             parser.error("--run requires exactly one source file");
+        if program_args and not args.run:
+            parser.error("arguments after -- require --run");
         first = files[0] if files else None;
         resolved_language = language;
         if resolved_language == "auto" and first is not None:
@@ -1348,6 +1356,12 @@ def _main(argv=None, forced_language=None, prog="sumide"):
             ide = ide_class(first, theme=args.theme);
         for source in files[1:]:
             ide.open_path(source, activate=False);
+        if program_args:
+            setter = getattr(ide, "set_program_args", None);
+            if callable(setter):
+                setter(program_args);
+            else:
+                ide.program_args = list(program_args);
         if args.run:
             fired = {"value": False};
             def autorun():
