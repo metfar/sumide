@@ -509,6 +509,10 @@ class ScriptIDE(EditApp):
             return False;
         return self.close_workspace_window(target);
 
+    def close_document(self):
+        """Keep EditApp's Ctrl+W binding aligned with the active IDE source.""";
+        return self.close_current_document();
+
     def _confirm_all_unsaved(self, callback):
         dirty = [(window, state) for window, state in self._code_buffers.items() if state["editor"].modified];
         if not dirty:

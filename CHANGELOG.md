@@ -1,3 +1,7 @@
+## 0.2.20
+
+- Kept the shared Ctrl+W document action aligned with sumIDE's existing multi-source workspace model after the sumedit multi-document update.
+
 # r20 coordinated release
 
 - Aligned with SUM r20 architecture and package versions.
