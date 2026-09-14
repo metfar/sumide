@@ -1,3 +1,9 @@
+## 0.2.21
+
+- Inherits the common `EditApp` Recent Files MRU and two-directory history from sumTUI 0.8.0a21.
+- The source Open dialog now uses the shared quick-path bar, including Android **App Home**, **Storage**, **Last 1**, and **Last 2** shortcuts.
+- `open_path()` updates the shared recent-file history, and sumIDE configuration saves preserve that history.
+
 ## 0.2.20
 
 - Kept the shared Ctrl+W document action aligned with sumIDE's existing multi-source workspace model after the sumedit multi-document update.

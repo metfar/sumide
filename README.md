@@ -1,4 +1,4 @@
-# sumIDE 0.2.20
+# sumIDE 0.2.21
 
 `sumIDE` is the common multi-language IDE for the Sum ecosystem. It is built on `sumTUI`, but it is a separate project: `sumTUI` owns reusable terminal UI/editor primitives and `sumIDE` owns IDE behavior, language profiles, templates, preferences, build/run integration and project-oriented features.
 
@@ -19,6 +19,8 @@ sumide --language=cxx hello.cpp
 sumphp index.php
 sumruby tool.rb
 ```
+
+The common editor shell now keeps **File -> Recent Files** plus the two most recently used Open/Save directories. On Android, the Open dialog exposes direct **App Home** and **Storage** buttons alongside **Last 1** / **Last 2**, so moving between the private application files and `/storage/emulated/0` does not require retyping paths.
 
 `sumBASIC` and `sumX` keep their runtime/compile command-line modes, but their source-editor entry paths delegate to this common IDE. When those runtime packages are installed, `sumIDE --language=basic` and `sumIDE --language=xbase` load their language-specific in-process backends while keeping the common sumIDE shell. The historical commands `sumbasic program.bas` and `sumx program.prg` therefore act as compatibility launchers into the same IDE rather than maintaining separate editor implementations.
 

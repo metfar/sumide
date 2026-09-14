@@ -377,6 +377,7 @@ class ScriptIDE(EditApp):
 
     def open_path(self, path, activate=True):
         document = TextDocument.load(Path(path).expanduser(), force_binary=self.force_binary) if Path(path).expanduser().exists() else TextDocument.empty(Path(path).expanduser());
+        if document.path is not None and Path(document.path).exists(): self._remember_recent_file(document.path);
         language = self._document_language(document, fallback=self.language);
         current = self._code_buffers.get(getattr(self, "code_window", None));
         if current is not None and self.code_window.persistent and self.document.path is None and not self.editor.modified and not self.editor.text:
@@ -399,7 +400,7 @@ class ScriptIDE(EditApp):
         return self._add_code_document(document, language=language, activate=activate, persistent=False);
 
     def _open_dialog_now(self):
-        start = self.document.path.parent if self.document.path is not None else Path.cwd();
+        start = self._open_start_directory();
         def close():
             self.app.pop_modal();
             self.app.focus.set(self.editor);
@@ -410,7 +411,7 @@ class ScriptIDE(EditApp):
                 self.open_path(path, activate=True);
             except Exception as exc:
                 self._update_status("Open error: {}".format(exc));
-        dialog = FileDialog(path=start, title="Open source file", on_accept=accepted, on_cancel=close, theme=self.app.theme);
+        dialog = FileDialog(path=start, title="Open source file", on_accept=accepted, on_cancel=close, quick_paths=self._file_dialog_quick_paths(), width=88, theme=self.app.theme);
         self.app.push_modal(dialog);
         self.app.invalidate();
         return True;
@@ -990,6 +991,8 @@ class ScriptIDE(EditApp):
         data["editor"] = editor;
         data["keybindings"] = self.keys.overrides();
         data["ide"] = dict(self.ide_config);
+        data["recent_files"] = [str(path) for path in self.recent_files()];
+        data["recent_directories"] = [str(path) for path in self.recent_directories()];
         try:
             target = save_ide_config(data, self.sumide_config_path);
             self.sumide_config = load_ide_config(target);

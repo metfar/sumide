@@ -338,3 +338,14 @@ def test_r211_run_forwards_program_args_after_double_dash(monkeypatch, tmp_path)
     monkeypatch.setattr(app_module, "_ide_class_for", lambda language: FakeIDE);
     assert app_module._main(["--gui", "--run", str(source), "--", "--octava", "5"]) == 0;
     assert observed == {"args": ["--octava", "5"], "ran": True, "backend": "gui"};
+
+
+def test_a21_sumide_open_path_updates_common_recent_history(tmp_path):
+    source=tmp_path / "demo.py"; source.write_text("print(1)\n",encoding="utf-8");
+    config=tmp_path / "sumide.json";
+    ide=ScriptIDE(language="python",sumide_config_path=config);
+    ide.open_path(source);
+    assert ide.recent_files()[0].resolve() == source.resolve();
+    assert ide.recent_directories()[0].resolve() == tmp_path.resolve();
+    saved=load_config(config);
+    assert saved["recent_files"][0] == str(source.resolve());
