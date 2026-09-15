@@ -1,4 +1,4 @@
-# sumIDE 0.2.21
+# sumIDE 0.2.22
 
 `sumIDE` is the common multi-language IDE for the Sum ecosystem. It is built on `sumTUI`, but it is a separate project: `sumTUI` owns reusable terminal UI/editor primitives and `sumIDE` owns IDE behavior, language profiles, templates, preferences, build/run integration and project-oriented features.
 
@@ -16,9 +16,12 @@ Examples:
 sumide program.py
 sumide --language=basic program.bas
 sumide --language=cxx hello.cpp
+sumbashide script.sh
 sumphp index.php
 sumruby tool.rb
 ```
+
+The Bash-oriented IDE launcher is now `sumbashide`. The `sumbash` command name is reserved for the actual SUM shell/multicall runtime, so installing sumIDE no longer overwrites the shell launcher.
 
 The common editor shell now keeps **File -> Recent Files** plus the two most recently used Open/Save directories. On Android, the Open dialog exposes direct **App Home** and **Storage** buttons alongside **Last 1** / **Last 2**, so moving between the private application files and `/storage/emulated/0` does not require retyping paths.
 
@@ -108,6 +111,6 @@ The packaged example library now includes the r17 BASIC DISPLAY/page-buffering, 
 
 The Python examples include matching native, Matplotlib and Seaborn report dashboards driven by one shared `ChartSpec` model. The BASIC examples include the same simplified named `CHART` syntax for each renderer.
 
-<p align=center><b>- oOo -<b></p>
+<p align=center><b>- oOo -</b></p>
 
 <p align=center><b>- oOo -</b></p>

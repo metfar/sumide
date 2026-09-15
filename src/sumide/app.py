@@ -1398,7 +1398,7 @@ def main_r(argv=None):
 
 
 def main_bash(argv=None):
-    return _main(argv=argv, forced_language="bash", prog="sumbash");
+    return _main(argv=argv, forced_language="bash", prog="sumbashide");
 
 
 def main_c(argv=None):
